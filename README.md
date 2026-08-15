@@ -7,7 +7,7 @@ Secure, production-ready RESTful API for **Catalyst Marketplace** built with **N
 
 ---
 
-## 🔒 Security & Architecture Highlights
+## Security & Architecture Highlights
 
 - Price Integrity Guard: Server recalculates total order prices directly from MongoDB database records to prevent client-side DevTools price tampering.
 - Rate Limiting Protection: Integrated `express-rate-limit` on Auth routes (10 req/15min) and General routes (100 req/15min) against brute-force attacks.
@@ -19,7 +19,7 @@ Secure, production-ready RESTful API for **Catalyst Marketplace** built with **N
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 marketplace-server/
@@ -49,7 +49,7 @@ marketplace-server/
 
 ---
 
-## 📡 API Endpoints
+## API Endpoints
 
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
