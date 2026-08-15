@@ -1,18 +1,21 @@
-# ⚡ Catalyst — E-Commerce Backend REST API
+# Catalyst — E-Commerce Backend REST API
 
-> Secure, production-ready RESTful API for **Catalyst Marketplace** built with **Node.js**, **Express**, **TypeScript**, and **MongoDB**.
+> **Tech Stack:** `Node.js` • `ExpressJS` • `TypeScript` • `MongoDB (Mongoose)` • `JWT` • `Bcrypt`  
+> **Frontend Client Repository:** [Catalyst-client](https://github.com/Vincent0-8/Catalyst-client)
+
+Secure, production-ready RESTful API for **Catalyst Marketplace** built with **Node.js**, **Express**, **TypeScript**, and **MongoDB**. Paired with the frontend application at [Catalyst-client](https://github.com/Vincent0-8/Catalyst-client).
 
 ---
 
 ## 🔒 Security & Architecture Highlights
 
-- **🛡️ Price Integrity Guard**: Server recalculates total order prices directly from MongoDB database records to prevent client-side DevTools price tampering.
-- **⚡ Rate Limiting Protection**: Integrated `express-rate-limit` on Auth routes (10 req/15min) and General routes (100 req/15min) against brute-force attacks.
-- **🛡️ Server-Side Input Validation**: Strict validation for email regex, missing parameters, and password minimum length (8 chars).
-- **🔍 ReDoS Protection**: Sanitized regex queries in product search to prevent MongoDB server crash on special characters (e.g. `\`, `*`, `[`).
-- **🔒 CORS Protection**: Restricted origin configuration enforcing trusted client access.
-- **🔐 JWT Authentication**: Token signing with secret validation at startup (`JWT_SECRET`).
-- **🔑 Password Hashing**: Salted password hashing via `bcryptjs` (salt rounds = 10).
+- Price Integrity Guard: Server recalculates total order prices directly from MongoDB database records to prevent client-side DevTools price tampering.
+- Rate Limiting Protection: Integrated `express-rate-limit` on Auth routes (10 req/15min) and General routes (100 req/15min) against brute-force attacks.
+- Server-Side Input Validation: Strict validation for email regex, missing parameters, and password minimum length (8 chars).
+- ReDoS Protection: Sanitized regex queries in product search to prevent MongoDB server crash on special characters (e.g. `\`, `*`, `[`).
+- CORS Protection: Restricted origin configuration enforcing trusted client access.
+- JWT Authentication: Token signing with secret validation at startup (`JWT_SECRET`).
+- Password Hashing: Salted password hashing via `bcryptjs` (salt rounds = 10).
 
 ---
 
@@ -59,7 +62,7 @@ marketplace-server/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js `v18+`
