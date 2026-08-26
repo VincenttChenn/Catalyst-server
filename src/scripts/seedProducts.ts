@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import Product from '../models/Product';
+import Order from '../models/Order';
 
 dotenv.config();
 
@@ -28,11 +29,14 @@ const seedDB = async (): Promise<void> => {
     await mongoose.connect(uri);
     console.log('MongoDB connected for seeding');
 
+    await Order.deleteMany({});
+    console.log('All test orders cleared');
+
     await Product.deleteMany({});
     console.log('Old products cleared');
 
     await Product.insertMany(products);
-    console.log(`${products.length} products seeded`);
+    console.log(`${products.length} products seeded with fresh initial stock`);
 
     process.exit(0);
   } catch (error) {
