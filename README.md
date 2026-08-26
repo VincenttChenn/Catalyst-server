@@ -10,7 +10,7 @@ Secure, production-ready RESTful API for **Catalyst Marketplace** built with **N
 ## Security & Architecture Highlights
 
 - Price Integrity Guard: Server recalculates total order prices directly from MongoDB database records to prevent client-side DevTools price tampering.
-- Rate Limiting Protection: Integrated `express-rate-limit` on Auth routes (10 req/15min) and General routes (100 req/15min) against brute-force attacks.
+- Rate Limiting Protection: Integrated `express-rate-limit` with trust proxy on Auth routes (20 req/15min) and General routes (1000 req/15min) against brute-force and DDoS attacks.
 - Server-Side Input Validation: Strict validation for email regex, missing parameters, and password minimum length (8 chars).
 - ReDoS Protection: Sanitized regex queries in product search to prevent MongoDB server crash on special characters (e.g. `\`, `*`, `[`).
 - CORS Protection: Restricted origin configuration enforcing trusted client access.

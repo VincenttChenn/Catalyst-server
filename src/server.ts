@@ -17,6 +17,9 @@ connectDB();
 
 const app = express();
 
+// SECURITY: trust proxy for accurate IP tracking behind Railway/Vercel reverse proxy
+app.set('trust proxy', 1);
+
 // SECURITY: restrict CORS to known frontend origin only
 app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:5173',
@@ -24,19 +27,19 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// SECURITY: rate limit for auth routes — prevent brute force attacks
+// SECURITY: rate limit for auth routes — prevent brute force attacks (login/register)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10,                   // max 10 requests per IP per window
+  max: 20,                   // max 20 attempts per 15 mins
   message: { message: 'Too many attempts, please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
-// SECURITY: general rate limit for all API routes
+// SECURITY: general rate limit for catalog browsing & orders
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,
+  max: 1000,                 // 1000 requests per 15 mins (generous for shopping & testing)
   standardHeaders: true,
   legacyHeaders: false,
 });
