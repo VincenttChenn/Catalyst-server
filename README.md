@@ -51,32 +51,35 @@ marketplace-server/
 
 ## API Endpoints
 
-| Method | Endpoint | Access | Description |
-|---|---|---|---|
-| `POST` | `/api/auth/register` | Public | Register new user account |
-| `POST` | `/api/auth/login` | Public | Authenticate user & receive JWT token |
-| `GET` | `/api/products` | Public | Fetch products (supports `?search=` and `?category=`) |
-| `GET` | `/api/products/:id` | Public | Fetch single product by ID |
-| `POST` | `/api/orders` | Protected | Create order (validates stock & calculates server price) |
-| `GET` | `/api/orders/my-orders` | Protected | Fetch order history of authenticated user |
+| Method | Endpoint                | Access    | Description                                              |
+| ------ | ----------------------- | --------- | -------------------------------------------------------- |
+| `POST` | `/api/auth/register`    | Public    | Register new user account                                |
+| `POST` | `/api/auth/login`       | Public    | Authenticate user & receive JWT token                    |
+| `GET`  | `/api/products`         | Public    | Fetch products (supports `?search=` and `?category=`)    |
+| `GET`  | `/api/products/:id`     | Public    | Fetch single product by ID                               |
+| `POST` | `/api/orders`           | Protected | Create order (validates stock & calculates server price) |
+| `GET`  | `/api/orders/my-orders` | Protected | Fetch order history of authenticated user                |
 
 ---
 
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js `v18+`
 - MongoDB Instance (Local or MongoDB Atlas Cloud)
 
 ### Installation & Local Setup
 
 1. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 2. **Configure Environment Variables**:
    Create a `.env` file in the root of `marketplace-server`:
+
    ```env
    PORT=5000
    MONGO_URI=mongodb://localhost:27017/marketplace
@@ -85,11 +88,13 @@ marketplace-server/
    ```
 
 3. **Seed Database (Optional)**:
+
    ```bash
    npm run seed
    ```
 
 4. **Run Development Server**:
+
    ```bash
    npm run dev
    ```
