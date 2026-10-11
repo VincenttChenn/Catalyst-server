@@ -1,9 +1,9 @@
 # Catalyst — E-Commerce Backend REST API
 
 > **Tech Stack:** `Node.js` • `ExpressJS` • `TypeScript` • `MongoDB (Mongoose)` • `JWT` • `Bcrypt`  
-> **Frontend Client Repository:** [Catalyst-client](https://github.com/Vincent0-8/Catalyst-client)
+> **Frontend Client Repository:** [Catalyst-client](https://github.com/VincenttChenn/Catalyst-client)
 
-Secure, production-ready RESTful API for **Catalyst Marketplace** built with **Node.js**, **Express**, **TypeScript**, and **MongoDB**. Paired with the frontend application at [Catalyst-client](https://github.com/Vincent0-8/Catalyst-client).
+Secure, production-ready RESTful API for **Catalyst Marketplace** built with **Node.js**, **Express**, **TypeScript**, and **MongoDB**. Paired with the frontend application at [Catalyst-client](https://github.com/VincenttChenn/Catalyst-client).
 
 ---
 
