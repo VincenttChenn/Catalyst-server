@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-    // File Layout
-    "rootDir": "./src",
     "outDir": "./dist",
 
     // Environment Settings
@@ -23,5 +21,6 @@
     "sourceMap": true,
 
     "skipLibCheck": true
-  }
+  },
+  "include": ["src/**/*", "api/**/*"]
 }

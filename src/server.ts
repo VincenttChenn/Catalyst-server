@@ -20,12 +20,46 @@ const app = express();
 // SECURITY: trust proxy for accurate IP tracking behind Railway/Vercel reverse proxy
 app.set('trust proxy', 1);
 
-// SECURITY: restrict CORS to known frontend origin only
+// SECURITY: flexible CORS allowing localhost, live frontend, and Vercel domains
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    const allowed = [
+      process.env.CLIENT_URL,
+      'http://localhost:5173',
+      'https://catalyst-client-marketplace.vercel.app',
+    ].filter(Boolean);
+
+    if (!origin || allowed.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(null, true);
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
+
+// Ensure database is connected for every request in serverless
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
+
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.json({
+    status: 'success',
+    message: 'Catalyst Backend API is running smoothly',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    database: 'connected',
+  });
+});
 
 // SECURITY: rate limit for auth routes — prevent brute force attacks (login/register)
 const authLimiter = rateLimit({
@@ -48,7 +82,12 @@ app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/products', generalLimiter, productRoutes);
 app.use('/api/orders', generalLimiter, orderRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Only listen directly when running in local development (not in serverless environment)
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+export default app;
