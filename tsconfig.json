@@ -7,7 +7,6 @@
     "module": "commonjs",
     "target": "ES2020",
     "lib": ["ES2020"],
-    "types": ["node"],
 
     // Module Resolution
     "ignoreDeprecations": "5.0",
