@@ -4,3 +4,6 @@ dist
 .env.*
 .env.local
 *.log
+api/*.js
+api/*.js.map
+
