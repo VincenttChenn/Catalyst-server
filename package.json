@@ -1,11 +1,13 @@
 {
   "name": "marketplace-server",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.1.0",
+  "description": "Catalyst marketplace REST API (Express, TypeScript, MongoDB)",
   "main": "index.js",
   "scripts": {
     "seed": "tsx src/scripts/seedProducts.ts",
+    "make-admin": "tsx src/scripts/makeAdmin.ts",
     "dev": "tsx watch src/server.ts",
+    "typecheck": "tsc --noEmit",
     "build": "tsc",
     "start": "node dist/server.js"
   },

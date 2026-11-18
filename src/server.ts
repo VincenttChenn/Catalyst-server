@@ -1,11 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import rateLimit from 'express-rate-limit';
 import { connectDB } from './config/database';
 import productRoutes from './routes/productRoutes';
 import authRoutes from './routes/authRoutes';
 import orderRoutes from './routes/orderRoutes';
+import { notFound, errorHandler } from './middleware/errorMiddleware';
 
 dotenv.config();
 
@@ -20,24 +22,32 @@ const app = express();
 // SECURITY: trust proxy for accurate IP tracking behind Railway/Vercel reverse proxy
 app.set('trust proxy', 1);
 
-// SECURITY: flexible CORS allowing localhost, live frontend, and Vercel domains
-app.use(cors({
-  origin: (origin, callback) => {
-    const allowed = [
-      process.env.CLIENT_URL,
-      'http://localhost:5173',
-      'https://catalyst-client-marketplace.vercel.app',
-    ].filter(Boolean);
+// SECURITY: only trusted origins may call the API from a browser.
+// CLIENT_URL may hold several comma-separated origins, e.g. a production and a preview URL.
+const allowedOrigins = [
+  ...(process.env.CLIENT_URL ?? '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean),
+  'http://localhost:5173',
+  'https://catalyst-client-marketplace.vercel.app',
+];
 
-    if (!origin || allowed.includes(origin) || origin.endsWith('.vercel.app')) {
-      callback(null, true);
-    } else {
-      callback(null, true);
-    }
-  },
-  credentials: true,
-}));
-app.use(express.json());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // no Origin header = curl, Postman, server-to-server
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    },
+    credentials: true,
+  })
+);
+// SECURITY: cap the body size so huge payloads can't be used to exhaust memory
+app.use(express.json({ limit: '10kb' }));
 
 // Ensure database is connected for every request in serverless
 app.use(async (req, res, next) => {
@@ -55,16 +65,18 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    database: 'connected',
+  // readyState 1 = connected
+  const dbConnected = mongoose.connection.readyState === 1;
+  res.status(dbConnected ? 200 : 503).json({
+    status: dbConnected ? 'ok' : 'degraded',
+    database: dbConnected ? 'connected' : 'disconnected',
   });
 });
 
 // SECURITY: rate limit for auth routes — prevent brute force attacks (login/register)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20,                   // max 20 attempts per 15 mins
+  max: 20, // max 20 attempts per 15 mins
   message: { message: 'Too many attempts, please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
@@ -73,7 +85,7 @@ const authLimiter = rateLimit({
 // SECURITY: general rate limit for catalog browsing & orders
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000,                 // 1000 requests per 15 mins (generous for shopping & testing)
+  max: 1000, // 1000 requests per 15 mins (generous for shopping & testing)
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -81,6 +93,9 @@ const generalLimiter = rateLimit({
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/products', generalLimiter, productRoutes);
 app.use('/api/orders', generalLimiter, orderRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
 
 // Only listen directly when running in local development (not in serverless environment)
 if (process.env.NODE_ENV !== 'production') {
@@ -90,4 +105,5 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
+// Vercel's @vercel/node runtime uses the default export as the request handler
 export default app;
